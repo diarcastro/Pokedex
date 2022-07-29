@@ -1,5 +1,5 @@
 enum AppActionType {
-  DUMMY_STATE = 'DUMMY_STATE',
+  SET_POKEMONS = 'SET_POKEMONS',
 }
 
 export default AppActionType;
