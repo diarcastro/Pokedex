@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import _map from 'lodash/map';
 
-import routes from './routes';
+import routes from './paths';
 
 const Router = () => (
   <Routes>
