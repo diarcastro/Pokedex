@@ -12,7 +12,7 @@ const useParam = (pattern: string) => {
   return {
     match,
     pokemonName,
-    pageNumber: pageNumber !== null ? Number(pageNumber) : null,
+    pageNumber: pageNumber !== null ? Number(pageNumber) - 1 : null,
   };
 };
 

@@ -2,15 +2,15 @@ import { combineReducers } from 'redux';
 import _isNil from 'lodash/isNil';
 
 import { AppStateStoreAction, GlobalAppState } from 'interfaces/store';
-import { Pokemon } from 'interfaces/pokemon';
 import AppActionType from 'enums/app';
 import { ApiConfig } from 'config';
+import { Pokemon } from 'interfaces/pokemon';
 
-const { limit } = ApiConfig;
+const { itemsPerPage } = ApiConfig;
 
 const AppState: GlobalAppState = {
   currentPage: 0,
-  pageItems: [],
+  pageItems: null,
   pokemons: [],
 };
 
@@ -20,6 +20,7 @@ const appReducer = (
 ) => {
   const {
     currentPage: stateCurrentPage,
+    pokemons: statePokemons,
   } = state || {};
   const {
     type: actionType,
@@ -28,18 +29,29 @@ const appReducer = (
       pokemons = [],
     } = {},
   } = action || {};
+
+  const makePageItems = (page: number, items: Pokemon[]) => {
+    if (!_isNil(page) && items.length) {
+      const sliceStart = Number(page) * itemsPerPage;
+      const sliceEnd = sliceStart + itemsPerPage;
+      return items.slice(sliceStart, sliceEnd);
+    }
+
+    return null;
+  };
   switch (actionType) {
     case AppActionType.SET_CURRENT_PAGE:
-      return { ...state, currentPage: currentPage || stateCurrentPage };
+      return {
+        ...state,
+        currentPage,
+        pageItems: makePageItems(currentPage || 0, statePokemons),
+      };
     case AppActionType.SET_POKEMONS: {
-      let pageItems:Pokemon[] = [];
-      if (!_isNil(stateCurrentPage) && pokemons.length) {
-        const sliceStart = Number(stateCurrentPage) * limit;
-        const sliceEnd = sliceStart + limit;
-        pageItems = pokemons.slice(sliceStart, sliceEnd);
-      }
-
-      return { ...state, pokemons, pageItems };
+      return {
+        ...state,
+        pokemons,
+        pageItems: makePageItems(stateCurrentPage || 0, pokemons),
+      };
     }
     default:
       return state;

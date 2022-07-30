@@ -3,7 +3,7 @@ import { Pokemon } from './pokemon';
 
 export interface GlobalAppState {
   currentPage: number | null;
-  pageItems: Pokemon[];
+  pageItems: Pokemon[] | null;
   pokemons: Pokemon[];
 }
 

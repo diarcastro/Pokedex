@@ -9,7 +9,8 @@ export const ApiConfig = {
   cache: true,
   timeout: 5 * 1000,
   cacheImages: true,
-  limit: 20,
+  limit: 151,
+  itemsPerPage: 20,
 };
 
 export default APP_CONFIG;

@@ -14,7 +14,7 @@ import useParam from './useParam';
 
 const Pokedex = require('pokeapi-js-wrapper');
 
-const { limit } = ApiConfig;
+const { itemsPerPage, limit } = ApiConfig;
 const pokedex = new Pokedex.Pokedex(ApiConfig);
 
 const usePokemon = () => {
@@ -26,16 +26,10 @@ const usePokemon = () => {
     pokemons,
   } = useSelector(({ app }: AppState) => app);
 
-  useEffect(() => {
-    if (match && currentPage !== pageNumber) {
-      dispatch(setCurrentPage(pageNumber));
-    }
-  }, [currentPage, pageNumber, dispatch, match]);
-
-  const getPokemons = useCallback((page: number) => {
+  const getPokemons = useCallback(() => {
     const params = {
       limit,
-      offset: limit * page,
+      offset: 0,
     };
 
     pokedex.getPokemonsList(params).then((pokemonsData: PokemonResponseData) => {
@@ -55,18 +49,37 @@ const usePokemon = () => {
       // @ts-ignore
       const { types } = response || {};
       return _map(types, ({ type }) => type && type.name);
+    }).catch((e: any) => {
+      console.log(e);
+      return [];
     }), []);
 
+  const totalPages = !pokemons || !pokemons.length
+    ? 0
+    : Math.ceil(pokemons.length / itemsPerPage);
+
+  const resetCurrentPage = () => dispatch(setCurrentPage(0));
+
   useEffect(() => {
-    if (currentPage !== null && !pokemons.length) {
-      getPokemons(currentPage);
+    if (match && currentPage !== pageNumber) {
+      dispatch(setCurrentPage(pageNumber));
     }
-  }, [currentPage, pokemons, getPokemons]);
+  }, [currentPage, pageNumber, dispatch, match]);
+
+  useEffect(() => {
+    if (pokemons && !pokemons.length) {
+      getPokemons();
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, []);
 
   return {
     currentPage,
     pageItems,
     getTypes,
+    totalPages,
+
+    resetCurrentPage,
   };
 };
 

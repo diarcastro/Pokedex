@@ -39,7 +39,6 @@ const PokemonCard = ({ pokemon }: PokemonCardProps) => {
     );
 
   useEffect(() => {
-    console.log({ types, name });
     if (!types) {
       getTypes(name).then((pokemonTypes) => {
         setTypes(pokemonTypes);
