@@ -8,7 +8,7 @@ export const ApiConfig = {
   versionPath: '/api/v2/',
   cache: true,
   timeout: 5 * 1000,
-  cacheImages: false,
+  cacheImages: true,
   limit: 20,
 };
 

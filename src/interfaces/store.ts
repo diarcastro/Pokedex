@@ -2,12 +2,13 @@ import AppActionType from 'enums/app';
 import { Pokemon } from './pokemon';
 
 export interface GlobalAppState {
-  currentPage: number;
+  currentPage: number | null;
+  pageItems: Pokemon[];
   pokemons: Pokemon[];
 }
 
 export interface GlobalAppStatePayload {
-  currentPage?: number;
+  currentPage?: number | null;
   pokemons?: Pokemon[];
 }
 

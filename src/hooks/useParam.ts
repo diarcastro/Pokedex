@@ -4,14 +4,15 @@ const useParam = (pattern: string) => {
   const match = useMatch(pattern);
   const {
     params: {
-      pokemonName = '',
-      pageNumber = 0,
+      pokemonName = null,
+      pageNumber = null,
     } = {},
   } = match || {};
 
   return {
+    match,
     pokemonName,
-    pageNumber,
+    pageNumber: pageNumber !== null ? Number(pageNumber) : null,
   };
 };
 
