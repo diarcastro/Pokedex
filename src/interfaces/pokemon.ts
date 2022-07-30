@@ -6,11 +6,28 @@ export interface PokemonBase {
 }
 
 export interface Pokemon extends PokemonBase {
+  evolutionChain?: string;
+  evolutionChainId?: number;
+  evolutions?: Pokemon[];
 }
 
-export interface PokemonResponseData {
+export interface PokemonResponseData extends PokemonBase {
   count: number;
   next: string;
   previous: string;
   results: Pokemon[];
+  chain: EvolutionChain;
+  evolution_chain: {
+    url: string;
+  };
+}
+
+export interface EvolutionChainSpecie {
+  name: string;
+  url: string;
+}
+
+export interface EvolutionChain {
+  species: EvolutionChainSpecie;
+  evolves_to: EvolutionChain[];
 }

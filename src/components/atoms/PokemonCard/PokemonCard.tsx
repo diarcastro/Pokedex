@@ -10,9 +10,10 @@ import styles from './styles';
 
 export interface PokemonCardProps extends BaseComponent {
   pokemon: Pokemon;
+  fullCard?: boolean;
 }
 
-const PokemonCard = ({ pokemon }: PokemonCardProps) => {
+const PokemonCard = ({ pokemon, fullCard = false }: PokemonCardProps) => {
   const [types, setTypes] = useState<string[] | null>(null);
   const {
     getTypes,
@@ -46,23 +47,46 @@ const PokemonCard = ({ pokemon }: PokemonCardProps) => {
     }
   }, [name, getTypes, types]);
 
-  return (
-    <NavLink key={id} className={styles.component} to={`/${name}`}>
+  const cardContent = (
+    <React.Fragment>
       <span className={styles.cardNumber}>{id}</span>
-      <span className="sr-only">
-        Go to
-        {name}
-        page
-        {' '}
-      </span>
+      {
+        !fullCard && (
+          <span className="sr-only">
+            Go to
+            {name}
+            {' '}
+            page
+          </span>
+        )
+      }
       <div className={styles.imageContainer}>
-        <img src={image} alt={name} className={styles.image} />
+        <img src={image} alt={name} className={styles.image(fullCard)} />
       </div>
       { typesElement }
       <div className={styles.name}>
         {name}
       </div>
+    </React.Fragment>
+  );
+
+  const linkCardContent = !fullCard && (
+    <NavLink className={styles.component(fullCard)} to={`/${name}`}>
+      {cardContent}
     </NavLink>
+  );
+
+  const fullCardContent = fullCard && (
+    <section className={styles.component(fullCard)}>
+      {cardContent}
+    </section>
+  );
+
+  return (
+    <React.Fragment>
+      { linkCardContent }
+      { fullCardContent }
+    </React.Fragment>
   );
 };
 

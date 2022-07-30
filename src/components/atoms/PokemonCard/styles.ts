@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 
 const styles = {
-  component: classNames(
+  component: (fullCard: boolean = false) => classNames(
     'relative',
     'bg-white',
     'rounded-md',
@@ -9,8 +9,10 @@ const styles = {
     'w-100',
     'transition-all',
     'drop-shadow-md',
-    'focus:ring-3 focus:drop-shadow-lg',
-    'hover:drop-shadow-lg',
+    {
+      'focus:ring-3 focus:drop-shadow-lg': !fullCard,
+      'hover:drop-shadow-lg': !fullCard,
+    },
   ),
   cardNumber: classNames(
     'absolute',
@@ -24,10 +26,14 @@ const styles = {
     'rounded-md',
   ),
   imageContainer: classNames('p-6'),
-  image: classNames(
+  image: (fullCard: boolean = false) => classNames(
     'max-w-100',
     'h-32',
     'mx-auto',
+    {
+      'h-44': fullCard,
+      'h-32': !fullCard,
+    },
   ),
   name: classNames(
     'font-bold',
