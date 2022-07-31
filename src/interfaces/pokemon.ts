@@ -1,8 +1,20 @@
+export interface PokemonStat {
+  name: string;
+  base: number;
+  effort: number;
+}
+
 export interface PokemonBase {
   id: number;
   name: string;
   image: string;
   url: string;
+  height?: number;
+  types?: string[];
+  weight?: number;
+  baseExperience?: number;
+  abilities?: string[];
+  stats?: PokemonStat[];
 }
 
 export interface Pokemon extends PokemonBase {

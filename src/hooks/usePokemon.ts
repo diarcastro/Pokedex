@@ -44,14 +44,48 @@ const usePokemon = () => {
     });
   }, [dispatch]);
 
-  const getTypes = useCallback((name: string): Promise<string[]> => pokedex.getPokemonByName(name)
-    .then((response: any[]): string[] => {
+  // eslint-disable-next-line max-len
+  const getPokemonByName = useCallback((name: string): Promise<Pokemon> => pokedex.getPokemonByName(name)
+    .then((response: any): Pokemon => {
       // @ts-ignore
-      const { types } = response || {};
-      return _map(types, ({ type }) => type && type.name);
+      const {
+        types,
+        abilities,
+        weight,
+        height,
+        stats,
+        base_experience: baseExperience,
+      } = response || {};
+      const pokemonTypes = _map(types, ({ type }) => type && type.name);
+      const pokemonAbilities = _map(abilities, ({ ability }) => ability && ability.name);
+      const pokemonStats = _map(stats, (stat) => {
+        const {
+          base_stat: base,
+          effort,
+          stat: {
+            name: statName = '',
+          } = {},
+        } = stat;
+        return {
+          base,
+          effort,
+          name: statName,
+        };
+      });
+      return {
+        ...response,
+        ...{
+          baseExperience,
+          weight,
+          height,
+          types: pokemonTypes,
+          abilities: pokemonAbilities,
+          stats: pokemonStats,
+        },
+      };
     }).catch((e: any) => {
       console.log(e);
-      return [];
+      return {};
     }), []);
 
   const totalPages = !pokemons || !pokemons.length
@@ -59,8 +93,8 @@ const usePokemon = () => {
     : Math.ceil(pokemons.length / itemsPerPage);
 
   const resetCurrentPage = () => dispatch(setCurrentPage(0));
-  const getPokemon = (name:string):Promise<Pokemon> => pokedex.getPokemonSpeciesByName(name)
-    .then((pokemonData:PokemonResponseData) => {
+  const getPokemon = (name: string): Promise<Pokemon> => pokedex.getPokemonSpeciesByName(name)
+    .then((pokemonData: PokemonResponseData) => {
       const {
         id,
         name: pokemonName,
@@ -78,11 +112,11 @@ const usePokemon = () => {
         evolutionChain,
         evolutionChainId,
       };
-    }).then((pokemonData:Pokemon): Pokemon => {
+    }).then((pokemonData: Pokemon): Pokemon => {
       const { evolutionChainId } = pokemonData;
 
       return pokedex.getEvolutionChainById(evolutionChainId)
-        .then((response:PokemonResponseData) => {
+        .then((response: PokemonResponseData) => {
           const { chain } = response;
           const evolutions = getEvolves(chain);
           return { ...pokemonData, evolutions };
@@ -105,8 +139,8 @@ const usePokemon = () => {
   return {
     currentPage,
     pageItems,
-    getTypes,
     totalPages,
+    getPokemonByName,
 
     resetCurrentPage,
     getPokemon,

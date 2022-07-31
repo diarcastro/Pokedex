@@ -17,6 +17,8 @@ const Heading = ({
   switch (size) {
     case HeadingSize.H1:
       return <h1 className={componentClasses}>{children}</h1>;
+    case HeadingSize.H3:
+      return <h3 className={componentClasses}>{children}</h3>;
     case HeadingSize.H2:
     default:
       return <h2 className={componentClasses}>{children}</h2>;

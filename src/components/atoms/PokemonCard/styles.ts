@@ -25,7 +25,12 @@ const styles = {
     'bg-gray-50',
     'rounded-md',
   ),
-  imageContainer: classNames('p-6'),
+  imageContainer: (fullCard: boolean = false) => classNames(
+    'p-6',
+    {
+      'flex align-start justify-center gap-10 flex-col sm:flex-row': fullCard,
+    },
+  ),
   image: (fullCard: boolean = false) => classNames(
     'max-w-100',
     'h-32',

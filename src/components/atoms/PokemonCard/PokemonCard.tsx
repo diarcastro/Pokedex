@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import _map from 'lodash/map';
 
 import { BaseComponent } from 'interfaces';
 import { NavLink } from 'react-router-dom';
 import { Pokemon } from 'interfaces/pokemon';
+import Heading, { HeadingSize } from '@atoms/Heading';
 
 import usePokemon from 'hooks/usePokemon';
 import styles from './styles';
@@ -14,13 +15,21 @@ export interface PokemonCardProps extends BaseComponent {
 }
 
 const PokemonCard = ({ pokemon, fullCard = false }: PokemonCardProps) => {
-  const [types, setTypes] = useState<string[] | null>(null);
+  const [pokemonData, setPokemonData] = useState<Pokemon | null>(pokemon);
   const {
-    getTypes,
+    getPokemonByName,
   } = usePokemon();
   const {
-    id, name, image,
-  } = pokemon;
+    id,
+    name,
+    image,
+    types = [],
+    baseExperience,
+    height,
+    weight,
+    abilities,
+    stats,
+  } = pokemonData || {};
 
   const typesElement = types && types.length
     ? (
@@ -39,16 +48,80 @@ const PokemonCard = ({ pokemon, fullCard = false }: PokemonCardProps) => {
       <div className="px-4 my-3 text-center animate-pulse p-1 text-xs">Loading types...</div>
     );
 
+  /* Updating pokemon if the pokemon change */
   useEffect(() => {
-    if (!types) {
-      getTypes(name).then((pokemonTypes) => {
-        setTypes(pokemonTypes);
+    if (pokemon.name !== pokemonData?.name) {
+      setPokemonData(pokemon);
+    }
+  }, [pokemon, pokemonData, setPokemonData]);
+
+  /* Getting pokemon data */
+  useEffect(() => {
+    if (!types.length && name) {
+      getPokemonByName(pokemon.name).then((pokemonDataResult: Pokemon) => {
+        setPokemonData({ ...pokemonData, ...pokemonDataResult });
       });
     }
-  }, [name, getTypes, types]);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [name, getPokemonByName, types, pokemon]);
+
+  const statsComponent = fullCard && (
+    <section className="sm:w-1/2">
+      <Heading size={HeadingSize.H2}>Stats and info</Heading>
+      <article className="mb-4">
+        <p>
+          <strong>Height: </strong>
+          {' '}
+          {height}
+        </p>
+        <p>
+          <strong>Weight: </strong>
+          {' '}
+          {weight}
+        </p>
+        <p>
+          <strong>Base experience: </strong>
+          {' '}
+          {baseExperience}
+        </p>
+      </article>
+      <article className="mb-4">
+        <Heading size={HeadingSize.H3}>Abilities</Heading>
+        {
+          _map(
+            abilities,
+            (ability) => (<span key={ability} className="p-1 mr-2 bg-blue-100 text-xs rounded-sm">{ability}</span>),
+          )
+        }
+      </article>
+      <article className="mb-4">
+        <Heading size={HeadingSize.H3}>Stats</Heading>
+        {
+          _map(
+            stats,
+            ({ name: statName, base, effort }) => (
+              <p key={statName}>
+                <strong>{statName}</strong>
+                <span className="text-xs">
+                  {' '}
+                  Base:
+                  {' '}
+                  {base}
+                  {', '}
+                  Effort:
+                  {' '}
+                  {effort}
+                </span>
+              </p>
+            ),
+          )
+        }
+      </article>
+    </section>
+  );
 
   const cardContent = (
-    <React.Fragment>
+    <Fragment>
       <span className={styles.cardNumber}>{id}</span>
       {
         !fullCard && (
@@ -60,14 +133,20 @@ const PokemonCard = ({ pokemon, fullCard = false }: PokemonCardProps) => {
           </span>
         )
       }
-      <div className={styles.imageContainer}>
-        <img src={image} alt={name} className={styles.image(fullCard)} />
+      <div className={styles.imageContainer(fullCard)}>
+        <div>
+          <img src={image} alt={name} className={styles.image(fullCard)} />
+          <div className="mt-6">
+            { fullCard && typesElement }
+          </div>
+        </div>
+        {statsComponent}
       </div>
-      { typesElement }
+      { !fullCard && typesElement }
       <div className={styles.name}>
         {name}
       </div>
-    </React.Fragment>
+    </Fragment>
   );
 
   const linkCardContent = !fullCard && (
@@ -83,10 +162,10 @@ const PokemonCard = ({ pokemon, fullCard = false }: PokemonCardProps) => {
   );
 
   return (
-    <React.Fragment>
+    <Fragment>
       { linkCardContent }
       { fullCardContent }
-    </React.Fragment>
+    </Fragment>
   );
 };
 
