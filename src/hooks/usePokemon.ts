@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _map from 'lodash/map';
@@ -60,11 +59,11 @@ const usePokemon = () => {
     : Math.ceil(pokemons.length / itemsPerPage);
 
   const resetCurrentPage = () => dispatch(setCurrentPage(0));
-  const getPokemon = (name:string):Promise<Pokemon> => {
-    return pokedex.getPokemonSpeciesByName(name).then((pokemonData:PokemonResponseData) => {
+  const getPokemon = (name:string):Promise<Pokemon> => pokedex.getPokemonSpeciesByName(name)
+    .then((pokemonData:PokemonResponseData) => {
       const {
         id,
-        name,
+        name: pokemonName,
         evolution_chain: {
           url: evolutionChain,
         },
@@ -74,22 +73,21 @@ const usePokemon = () => {
 
       return {
         id,
-        name,
+        name: pokemonName,
         image,
         evolutionChain,
         evolutionChainId,
-      }
+      };
     }).then((pokemonData:Pokemon): Pokemon => {
       const { evolutionChainId } = pokemonData;
 
-      return pokedex.getEvolutionChainById(evolutionChainId).then((response:PokemonResponseData) => {
-        const { chain } = response;
-        const evolutions = getEvolves(chain);
-        return { ...pokemonData, evolutions };
-      });
-
+      return pokedex.getEvolutionChainById(evolutionChainId)
+        .then((response:PokemonResponseData) => {
+          const { chain } = response;
+          const evolutions = getEvolves(chain);
+          return { ...pokemonData, evolutions };
+        });
     });
-  };
 
   useEffect(() => {
     if (match && currentPage !== pageNumber) {

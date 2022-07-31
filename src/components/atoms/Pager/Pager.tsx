@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react';
 
 import { BaseComponent } from 'interfaces';
@@ -39,9 +38,11 @@ const Pager = ({ totalPages, currentPage }: PagerProps) => {
     pagesLinks.push(link);
   }
 
-  return <div className="mt-10 mb-6 flex flex-wrap gap-4 justify-center">
-    { pagesLinks }
-  </div>
+  return (
+    <div className="mt-10 mb-6 flex flex-wrap gap-4 justify-center">
+      { pagesLinks }
+    </div>
+  );
 };
 
 export default Pager;

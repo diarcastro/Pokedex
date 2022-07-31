@@ -4,7 +4,7 @@ import HeadingSize from './sizes';
 import styles from './styles';
 
 export interface HeadingProps extends BaseComponent {
-  size: HeadingSize,
+  size?: HeadingSize,
 }
 
 const Heading = ({

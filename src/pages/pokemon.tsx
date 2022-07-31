@@ -1,15 +1,16 @@
-/* eslint-disable */
 import { Fragment, useEffect, useState } from 'react';
-import Container from '@atoms/Container';
 import _map from 'lodash/map';
+import { NavLink } from 'react-router-dom';
 import _filter from 'lodash/filter';
 
-import useParam from 'hooks/useParam';
-import { ITEM_PATH } from 'routes/paths';
-import { NavLink } from 'react-router-dom';
-import usePokemon from '../hooks/usePokemon';
-import { Pokemon } from '../interfaces/pokemon';
+import Container from '@atoms/Container';
 import PokemonCard from '@atoms/PokemonCard';
+import Header from '@atoms/Header';
+
+import useParam from 'hooks/useParam';
+import usePokemon from 'hooks/usePokemon';
+import { ITEM_PATH } from 'routes/paths';
+import { Pokemon } from 'interfaces/pokemon';
 
 const PokemonPage = () => {
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
@@ -29,7 +30,7 @@ const PokemonPage = () => {
     getPokemon(pokemonName || '').then((pokemonData) => {
       setPokemon(pokemonData);
     });
-  }, [pokemonName]);
+  }, [pokemonName, setPokemon, getPokemon]);
 
   const evolutionsElement = filteredEvolutions && filteredEvolutions.length > 0 && (
     <section className="my-6 bg-yellow-50 rounded-md">
@@ -40,9 +41,7 @@ const PokemonPage = () => {
       </h2>
       <article className="grid gap-6 px-6 pb-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {
-          _map(filteredEvolutions, (evo) =>
-            <PokemonCard key={evo.id} pokemon={evo} />
-          )
+          _map(filteredEvolutions, (evo) => <PokemonCard key={evo.id} pokemon={evo} />)
         }
       </article>
     </section>
@@ -50,12 +49,21 @@ const PokemonPage = () => {
 
   return (
     <Fragment>
+      <Header />
       <Container>
         <NavLink to={goBackUrl} className="mt-6 mb-10 p-3 bg-blue-400 inline-flex rounded-sm text-white items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-               className="bi bi-chevron-left" viewBox="0 0 16 16">
-            <path fill-rule="evenodd"
-                  d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            className="bi bi-chevron-left"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fillRule="evenodd"
+              d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+            />
           </svg>
           <span className="ml-2">
             Go back

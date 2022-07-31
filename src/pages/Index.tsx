@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { Fragment, useEffect } from 'react';
 import _map from 'lodash/map';
 import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
@@ -6,10 +6,11 @@ import { useNavigate } from 'react-router-dom';
 import Container from '@atoms/Container';
 import PokemonCard from '@atoms/PokemonCard';
 import Pager from '@atoms/Pager';
+import Header from '@atoms/Header';
 
 import usePokemon from 'hooks/usePokemon';
+import useGoToTop from 'hooks/useGoToTop';
 import { Pokemon } from 'interfaces/pokemon';
-import useGoToTop from '../hooks/useGoToTop';
 
 const IndexPage = () => {
   const navigate = useNavigate();
@@ -46,33 +47,36 @@ const IndexPage = () => {
   }, [currentPage]);
 
   return (
-    <Container>
-      {
-        isLoading
-        && (
-        <div className="px-4 my-3 text-center animate-pulse p-1 text-xs">
-          Loading Pokedex Data...
-        </div>
-        )
-      }
-      {
-        pageItems && pageItems.length > 0
-        && (
-          <section className={sectionClasses}>
-            {
-              _map(
-                pageItems, (
-                  (pokemon: Pokemon) => <PokemonCard key={pokemon.id} pokemon={pokemon} />),
-              )
-            }
-          </section>
-        )
-      }
-      {
-        !isLoading
-          && <Pager totalPages={totalPages} currentPage={currentPage || 0} />
-      }
-    </Container>
+    <Fragment>
+      <Header />
+      <Container>
+        {
+          isLoading
+          && (
+          <div className="px-4 my-3 text-center animate-pulse p-1 text-xs">
+            Loading Pokedex Data...
+          </div>
+          )
+        }
+        {
+          pageItems && pageItems.length > 0
+          && (
+            <section className={sectionClasses}>
+              {
+                _map(
+                  pageItems, (
+                    (pokemon: Pokemon) => <PokemonCard key={pokemon.id} pokemon={pokemon} />),
+                )
+              }
+            </section>
+          )
+        }
+        {
+          !isLoading
+            && <Pager totalPages={totalPages} currentPage={currentPage || 0} />
+        }
+      </Container>
+    </Fragment>
   );
 };
 
