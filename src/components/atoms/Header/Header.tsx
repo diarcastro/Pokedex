@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import Heading from '@atoms/Heading';
 
 import { ReactComponent as Pokeball } from 'images/pokeball.svg';
+import { NavLink } from 'react-router-dom';
 
 const Header = () => {
   const headerClasses = classNames(
@@ -23,8 +24,11 @@ const Header = () => {
 
   return (
     <header className={headerClasses}>
-      <Pokeball className="w-10 h-10" />
-      <Heading>Pokedex</Heading>
+      <NavLink to="/" className="flex gap-4 items-center">
+        <span className="sr-only">Go to homepage</span>
+        <Pokeball className="w-10 h-10" />
+        <Heading>Pokedex</Heading>
+      </NavLink>
     </header>
   );
 };
