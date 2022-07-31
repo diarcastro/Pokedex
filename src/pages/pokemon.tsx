@@ -27,10 +27,13 @@ const PokemonPage = () => {
   const goBackUrl = currentPage !== null ? `/page/${currentPage + 1}` : '/';
 
   useEffect(() => {
+    if (name && name === pokemonName) {
+      return;
+    }
     getPokemon(pokemonName || '').then((pokemonData) => {
       setPokemon(pokemonData);
     });
-  }, [pokemonName, setPokemon, getPokemon]);
+  }, [name, pokemonName, setPokemon, getPokemon]);
 
   const evolutionsElement = filteredEvolutions && filteredEvolutions.length > 0 && (
     <section className="my-6 bg-yellow-50 rounded-md">
