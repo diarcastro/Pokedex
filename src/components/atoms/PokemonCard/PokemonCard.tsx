@@ -24,11 +24,11 @@ const PokemonCard = ({ pokemon, fullCard = false }: PokemonCardProps) => {
 
   const typesElement = types && types.length
     ? (
-      <div className="px-4 my-3 text-center">
+      <div className="px-4 my-3 text-center flex gap-3 justify-center">
         {_map(types, (type: string) => (
           <span
             key={type}
-            className="rounded-md mr-3 bg-blue-100 p-1 text-xs"
+            className={`rounded-md bg-${type} px-1.5 py-1 text-xs shadow-sm`}
           >
             {type}
           </span>
